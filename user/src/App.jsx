@@ -11,15 +11,8 @@ export const App = () => {
     e.preventDefault();
     const message = e.target.message.value;
 
-    const data = JSON.stringify({
-      id: 1,
-      name: "Ahmet",
-      message: message,
-      forwho: 2,
-    });
-
     // Sunucuya mesajı iletiyoruz
-    socket.emit("api/room", data);
+    socket.emit("api/room", message);
 
     // Mesajı yanıt listesine ekliyoruz
     setResponse([...response, "Sizden giden mesaj => " + message]);
@@ -32,7 +25,7 @@ export const App = () => {
     socket.emit("typing", "yazıyor...");
   };
 
-  socket.on("second/room2", (data) => {
+  socket.on("second/room", (data) => {
     // Gelen mesajları yanıt listesine ekliyoruz
     setResponse([...response, data]);
   });
@@ -51,7 +44,7 @@ export const App = () => {
           autoComplete="off"
           onChange={handleChange}
         />
-        <button type="submit">Gönder</button>
+        <button type="submit">send</button>
       </form>
 
       <p>{typing}</p>

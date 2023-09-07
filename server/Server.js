@@ -7,21 +7,37 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Soket.IO ni sozlash
+// İstemci bağlandığında
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("Yeni istemci bağlandı");
 
-  socket.on("/api/room", (data) => {
-    console.log("Message received: " + data);
+  // İstemciden gelen mesajı dinle
+  socket.on("api/room", (data) => {
+    const gData = JSON.parse(data);
 
-    // xabarni boshqa foydalanuvchilarga yuborish
-    socket.emit("/api/room", "Beckendga kelgan xabar => " + data);
+    if (gData.forwho === 2) {
+      // Diğer istemciye mesajı iletiyoruz
+      io.emit("second/room", "İkinci istemciye gelen mesaj => " + data);
+    } 
   });
 
-  socket.on("/typing", (data) => {
-    // Tuyping bo'lganini boshqa foydalanuvchilarga yuborish
-    socket.emit("/typing", "typing...");
+  // // İstemciden gelen mesajı dinle
+  // socket.on("api/room", (data) => {
+  //   console.log("Alınan mesaj: " + data);
+
+  //   // Diğer istemciye mesajı iletiyoruz
+  //   io.emit("second/room2", "İkinci istemciye gelen mesaj => " + data);
+  // });
+
+  let typingTimer;
+
+  socket.on("typing", () => {
+    clearTimeout(typingTimer);
+    socket.broadcast.emit("typing", "typing...");
+    typingTimer = setTimeout(() => {
+      socket.broadcast.emit("typing", "");
+    }, 1000);
   });
 });
 
-server.listen(port, () => console.log(`Server started on port: ${port}`));
+server.listen(port, () => console.log(`Sunucu ${port} portunda başlatıldı`));
