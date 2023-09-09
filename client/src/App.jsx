@@ -32,7 +32,7 @@ export const App = () => {
     socket.emit("typing", "yazıyor...");
   };
 
-  socket.on("second/room2", (data) => {
+  socket.on("second/room", (data) => {
     // Gelen mesajları yanıt listesine ekliyoruz
     setResponse([...response, data]);
   });

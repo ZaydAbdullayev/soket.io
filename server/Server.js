@@ -18,16 +18,16 @@ io.on("connection", (socket) => {
     if (gData.forwho === 2) {
       // Diğer istemciye mesajı iletiyoruz
       io.emit("second/room", "İkinci istemciye gelen mesaj => " + data);
-    } 
+    }
   });
 
-  // // İstemciden gelen mesajı dinle
-  // socket.on("api/room", (data) => {
-  //   console.log("Alınan mesaj: " + data);
+  // İstemciden gelen mesajı dinle
+  socket.on("api/room", (data) => {
+    console.log("Alınan mesaj: " + data);
 
-  //   // Diğer istemciye mesajı iletiyoruz
-  //   io.emit("second/room2", "İkinci istemciye gelen mesaj => " + data);
-  // });
+    // Diğer istemciye mesajı iletiyoruz
+    io.emit("second/room", "İkinci istemciye gelen mesaj => " + data);
+  });
 
   let typingTimer;
 
